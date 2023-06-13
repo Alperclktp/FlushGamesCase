@@ -1,4 +1,6 @@
 using Sirenix.OdinInspector;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridSystem : MonoBehaviour
@@ -7,11 +9,15 @@ public class GridSystem : MonoBehaviour
     [TabGroup("Options")][SerializeField] private int columnCount = 5;
     [TabGroup("Options")][SerializeField] private float tileSpacing = 1.5f;
 
-    [TabGroup("References")] [SerializeField] private GameObject tilePrefab;
+    public List<GameObject> gems = new List<GameObject>();
+
+    private GameObject tilePrefab;
 
     private void Awake()
     {
         LoadTilePrefab();
+
+        GenerateGrid();
     }
 
     [Button("Generate Grid")]
@@ -22,18 +28,52 @@ public class GridSystem : MonoBehaviour
         float totalSpacingX = (columnCount - 1) * tileSpacing;
         float totalSpacingZ = (rowCount - 1) * tileSpacing;
 
+        GemSO[] gemSOs = Resources.LoadAll<GemSO>("Gem");
+
         for (int i = 0; i < rowCount; i++)
         {
             for (int j = 0; j < columnCount; j++)
             {
+                int randomIndex = Random.Range(0, gemSOs.Length);
+                GemSO selectedGemSO = gemSOs[randomIndex];
+
                 GameObject tile = Instantiate(tilePrefab, transform);
 
                 float posX = j * tileSpacing - totalSpacingX / 2f;
                 float posZ = i * tileSpacing - totalSpacingZ / 2f;
 
                 tile.transform.localPosition = new Vector3(posX, 0f, posZ);
+
+                Tile tileComponent = tile.GetComponent<Tile>();
+
+                if (tileComponent != null)
+                {
+                    tileComponent.gemSO = selectedGemSO;
+
+                    var gem = Instantiate(selectedGemSO.Prefab);
+                    gem.transform.position = tileComponent.transform.position + Vector3.up * 0.03f;
+                    gem.transform.parent = tileComponent.transform;
+
+                    gems.Add(gem);
+                }
             }
         }
+    }
+
+    public IEnumerator IEGenerateRandomGemOnTile(Tile tile)
+    {
+        yield return new WaitForSeconds(tile.gem.spawnInterval);
+
+        GemSO[] gemSOs = Resources.LoadAll<GemSO>("Gem");
+
+        int randomIndex = Random.Range(0, gemSOs.Length);
+        GemSO selectedGemSO = gemSOs[randomIndex];
+
+        var gem = Instantiate(selectedGemSO.Prefab);
+        gem.transform.position = tile.transform.position + Vector3.up * 0.03f;
+        gem.transform.parent = tile.transform;
+
+        gems.Add(gem);
     }
 
     private void LoadTilePrefab()
@@ -56,5 +96,7 @@ public class GridSystem : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
+        gems.Clear();
     }
 }

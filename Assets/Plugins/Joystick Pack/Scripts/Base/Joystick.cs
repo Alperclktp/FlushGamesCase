@@ -55,6 +55,18 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         handle.anchorMax = center;
         handle.pivot = center;
         handle.anchoredPosition = Vector2.zero;
+
+        //BUGFIX
+        cam = null;
+        if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
+            cam = canvas.worldCamera;
+
+        Vector2 position = RectTransformUtility.WorldToScreenPoint(cam, background.position);
+        Vector2 radius = background.sizeDelta / 2;
+        input = Vector2.zero;
+        FormatInput();
+        HandleInput(input.magnitude, input.normalized, radius, cam);
+        handle.anchoredPosition = input * radius * handleRange;
     }
 
     public virtual void OnPointerDown(PointerEventData eventData)
