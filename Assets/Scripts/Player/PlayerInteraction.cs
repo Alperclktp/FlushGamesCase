@@ -1,28 +1,46 @@
 using DG.Tweening;
+using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
 {
+    public static PlayerInteraction Instance;
+
     public List<GameObject> collections = new List<GameObject>();
 
-    [SerializeField] private Transform collectHolder;
-
-    [SerializeField] private float perYOffset;
-
-    [SerializeField] private int maxStackCount;
+    [TabGroup("Options")][SerializeField] private Transform collectHolder;
+    [TabGroup("Options")] public float perYOffset;
+    [TabGroup("Options")][SerializeField] private int maxStackCount;
 
     private GridSystem gridSystem;
 
-    public static PlayerInteraction Instance;
+    public int currentMoney;
+
+    public Coroutine saleGemCoroutine;
+
+    private void Awake()
+    {
+        DOTween.SetTweensCapacity(1500, 1000);
+    }
 
     private void Start()
     {
         Instance = this;
 
         gridSystem = FindObjectOfType<GridSystem>();
+    }
+
+    private void Update()
+    {
+        UIManager.Instance.currentMoneyText.text = "$" + currentMoney.ToString();
+    }
+
+    private void FixedUpdate()
+    {
+        //FollowPrevious();
     }
 
     private void OnTriggerStay(Collider other)
@@ -33,16 +51,16 @@ public class PlayerInteraction : MonoBehaviour
         {
             if (other.transform.localScale.x >= gem.collectScale)
             {
-                CollectGem(other.transform);
-
-                gem.StopAllCoroutines();
-
-                StartCoroutine(gridSystem.IEGenerateRandomGemOnTile(gem.tile));
+                if (CollectGem(other.transform))
+                {
+                    gem.StopAllCoroutines();
+                    StartCoroutine(gridSystem.IEGenerateRandomGemOnTile(gem.tile));
+                }
             }
         }
     }
 
-    private void CollectGem(Transform t)
+    private bool CollectGem(Transform t)
     {
         if (!collections.Contains(t.gameObject))
         {
@@ -55,15 +73,19 @@ public class PlayerInteraction : MonoBehaviour
                 collections.Add(t.gameObject);
 
                 t.DOLocalJump(new Vector3(0, targetY, 0), 0.2f, 1, 0.5f).OnComplete(() =>
-                {                           
+                {
                     t.transform.localPosition = new Vector3(0, targetY, 0);
-                
+
                     t.localRotation = Quaternion.Euler(0, 0, 0);
-                
-                    t.GetComponent<Collider>().enabled = false;        
+
+                    t.GetComponent<Collider>().enabled = false;
                 });
+
+                return true;
             }
-        }      
+        }
+
+        return false;
     }
 
     //private void FollowPrevious()
@@ -76,8 +98,13 @@ public class PlayerInteraction : MonoBehaviour
     //        }
     //        else
     //        {
-    //            collections[i].transform.localPosition = Vector3.Lerp(collections[i].transform.localPosition, new Vector3(collections[i - 1].transform.localPosition.x, collections[i].transform.localPosition.y, collections[i - 1].transform.localPosition.z), followPower * Time.fixedDeltaTime);
+    //            collections[i].transform.localPosition = Vector3.Lerp(collections[i].transform.localPosition, new Vector3(collections[i - 1].transform.localPosition.x, collections[i].transform.localPosition.y, collections[i - 1].transform.localPosition.z), 20 * Time.fixedDeltaTime);
     //        }
     //    }
     //}
-}  
+}
+
+
+
+
+  

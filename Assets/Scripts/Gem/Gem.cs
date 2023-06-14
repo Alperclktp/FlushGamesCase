@@ -14,7 +14,7 @@ public class Gem : MonoBehaviour
 
     [TabGroup("Options")] public float spawnInterval;
 
-    [TabGroup("Options")][SerializeField] private int currentSalePrice;
+    [TabGroup("Options")] public int currentSalePrice;
 
     [FoldoutGroup("Debug")][SerializeField] private bool isCollectable;
 
@@ -69,6 +69,7 @@ public class Gem : MonoBehaviour
 
             float baseSalePrice = gemSO.SalePrice;
             float scaleUnit = baseSalePrice / maxScale;
+            
             currentSalePrice = Mathf.RoundToInt(baseSalePrice + newScale.y * scaleUnit * maxScale);
 
             //Debug.Log("Sale Price Value: " + currentSalePrice);
