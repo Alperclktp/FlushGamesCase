@@ -19,9 +19,10 @@ public class PlayerInteraction : MonoBehaviour
 
     public GemTypeCounts gemTypeCounts = new GemTypeCounts();
 
-    [TabGroup("Options")][SerializeField] private Transform collectHolder;
     [TabGroup("Options")] public float perYOffset;
     [TabGroup("Options")][SerializeField] private int maxStackCount;
+
+    [TabGroup("References")][SerializeField] private Transform collectHolder;
 
     private GridSystem gridSystem;
 
