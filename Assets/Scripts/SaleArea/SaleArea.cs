@@ -19,7 +19,6 @@ public class SaleArea : MonoBehaviour
             }
         }
     }
-
     private void OnTriggerExit(Collider other)
     {
         var player = other.GetComponent<PlayerInteraction>();
@@ -77,12 +76,20 @@ public class SaleArea : MonoBehaviour
         {
             player.collections.Remove(gem);
 
-            if (gem != null)
+            Gem gemComponent = gem.GetComponent<Gem>();
+            if (gemComponent != null)
             {
-                player.currentMoney += gem.GetComponent<Gem>().currentSalePrice;
-                Destroy(gem);
+                if (player.gemTypeCollections.ContainsKey(gemComponent.gemSO))
+                {
+                    player.gemTypeCollections[gemComponent.gemSO].Remove(gem);
+
+                    UIManager.Instance.UpdateCollectedCountText();
+                }
             }
+
+            UIManager.Instance.currentMoney += gem.GetComponent<Gem>().currentSalePrice;
+            UIManager.Instance.Save();
+            Destroy(gem);
         }
     }
-
 }

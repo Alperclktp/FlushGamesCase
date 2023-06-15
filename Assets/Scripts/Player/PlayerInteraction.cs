@@ -1,9 +1,13 @@
 using DG.Tweening;
-using JetBrains.Annotations;
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+[System.Serializable]
+public class GemCollectionDictionary : Dictionary<GemSO, List<GameObject>> { }
+
+[System.Serializable]
+public class GemTypeCounts : Dictionary<GemSO, int> { }
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -11,13 +15,15 @@ public class PlayerInteraction : MonoBehaviour
 
     public List<GameObject> collections = new List<GameObject>();
 
+    public GemCollectionDictionary gemTypeCollections = new GemCollectionDictionary();
+
+    public GemTypeCounts gemTypeCounts = new GemTypeCounts();
+
     [TabGroup("Options")][SerializeField] private Transform collectHolder;
     [TabGroup("Options")] public float perYOffset;
     [TabGroup("Options")][SerializeField] private int maxStackCount;
 
     private GridSystem gridSystem;
-
-    public int currentMoney;
 
     public Coroutine saleGemCoroutine;
 
@@ -31,11 +37,6 @@ public class PlayerInteraction : MonoBehaviour
         Instance = this;
 
         gridSystem = FindObjectOfType<GridSystem>();
-    }
-
-    private void Update()
-    {
-        UIManager.Instance.currentMoneyText.text = "$" + currentMoney.ToString();
     }
 
     private void FixedUpdate()
@@ -62,7 +63,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private bool CollectGem(Transform t)
     {
-        if (!collections.Contains(t.gameObject))
+        Gem gem = t.GetComponent<Gem>();
+
+        if (gem != null && !collections.Contains(t.gameObject))
         {
             if (collections.Count < maxStackCount)
             {
@@ -70,7 +73,14 @@ public class PlayerInteraction : MonoBehaviour
 
                 t.parent = collectHolder;
 
+                if (!gemTypeCollections.ContainsKey(gem.gemSO))
+                {
+                    gemTypeCollections[gem.gemSO] = new List<GameObject>();
+                }
+
                 collections.Add(t.gameObject);
+
+                gemTypeCollections[gem.gemSO].Add(t.gameObject);
 
                 t.DOLocalJump(new Vector3(0, targetY, 0), 0.2f, 1, 0.5f).OnComplete(() =>
                 {
@@ -79,14 +89,25 @@ public class PlayerInteraction : MonoBehaviour
                     t.localRotation = Quaternion.Euler(0, 0, 0);
 
                     t.GetComponent<Collider>().enabled = false;
+
+                    //UIManager.Instance.UpdateCollectedCountText();
                 });
 
+                if (gemTypeCounts.ContainsKey(gem.gemSO))
+                {
+                    gemTypeCounts[gem.gemSO]++;
+                }
+                else
+                {
+                    gemTypeCounts[gem.gemSO] = 1;
+                }
                 return true;
             }
         }
 
         return false;
     }
+}
 
     //private void FollowPrevious()
     //{
@@ -98,13 +119,5 @@ public class PlayerInteraction : MonoBehaviour
     //        }
     //        else
     //        {
-    //            collections[i].transform.localPosition = Vector3.Lerp(collections[i].transform.localPosition, new Vector3(collections[i - 1].transform.localPosition.x, collections[i].transform.localPosition.y, collections[i - 1].transform.localPosition.z), 20 * Time.fixedDeltaTime);
-    //        }
-    //    }
-    //}
-}
-
-
-
-
-  
+    //
+    //       collections[i].transform.localPosition = Vector3.Lerp(collections[i].transform.localPosition, new Vector3

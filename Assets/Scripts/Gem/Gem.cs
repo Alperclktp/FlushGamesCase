@@ -16,9 +16,9 @@ public class Gem : MonoBehaviour
 
     [TabGroup("Options")] public int currentSalePrice;
 
-    [FoldoutGroup("Debug")][SerializeField] private bool isCollectable;
+    private bool isCollectable;
 
-    private GemSO gemSO;
+    [HideInInspector] public GemSO gemSO; 
 
     [HideInInspector] public Tile tile;
     [HideInInspector] public GridSystem gridSystem;

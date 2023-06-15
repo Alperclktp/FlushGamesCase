@@ -69,12 +69,15 @@ public class GridSystem : MonoBehaviour
         int randomIndex = Random.Range(0, gemSOs.Length);
         GemSO selectedGemSO = gemSOs[randomIndex];
 
+        tile.gemSO = selectedGemSO; 
+
         var gem = Instantiate(selectedGemSO.Prefab);
         gem.transform.position = tile.transform.position + Vector3.up * 0.03f;
         gem.transform.parent = tile.transform;
 
         gems.Add(gem);
     }
+
 
     private void LoadTilePrefab()
     {
