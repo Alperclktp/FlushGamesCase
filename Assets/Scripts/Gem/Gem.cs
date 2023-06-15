@@ -18,7 +18,7 @@ public class Gem : MonoBehaviour
 
     private bool isCollectable;
 
-    [HideInInspector] public GemSO gemSO; 
+    [HideInInspector] public GemSO gemSO;
 
     [HideInInspector] public Tile tile;
     [HideInInspector] public GridSystem gridSystem;
@@ -69,7 +69,7 @@ public class Gem : MonoBehaviour
 
             float baseSalePrice = gemSO.SalePrice;
             float scaleUnit = baseSalePrice / maxScale;
-            
+
             currentSalePrice = Mathf.RoundToInt(baseSalePrice + newScale.y * scaleUnit * maxScale);
 
             //Debug.Log("Sale Price Value: " + currentSalePrice);

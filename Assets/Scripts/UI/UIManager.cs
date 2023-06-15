@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
 
     [TabGroup("References")][SerializeField] private GameObject allGemsButton;
     [TabGroup("References")] public GameObject gemInfo;
-        
+
     private void Awake()
     {
         Instance = this;
@@ -74,7 +74,7 @@ public class UIManager : MonoBehaviour
             PlayerInteraction.Instance.gemTypeCounts[gemType] = count;
         }
 
-        UpdateCollectedCountText(); 
+        UpdateCollectedCountText();
     }
 
     [Button("Delete Data")]

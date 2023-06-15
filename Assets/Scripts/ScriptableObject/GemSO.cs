@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="New Gem", menuName ="Gem Settings/New Gem Type")]
+[CreateAssetMenu(fileName = "New Gem", menuName = "Gem Settings/New Gem Type")]
 public class GemSO : ScriptableObject
 {
     [SerializeField] private int id = default;
@@ -11,7 +11,7 @@ public class GemSO : ScriptableObject
     public string Name { get { return displayName; } }
 
     [SerializeField] private int salePrice;
-    public int SalePrice { get {  return salePrice; } }
+    public int SalePrice { get { return salePrice; } }
 
     [SerializeField] private Sprite icon;
     public Sprite Icon { get { return icon; } }

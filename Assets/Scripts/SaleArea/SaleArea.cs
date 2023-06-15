@@ -44,7 +44,7 @@ public class SaleArea : MonoBehaviour
             Vector3 targetPosition = salePos.position + Vector3.up * ((player.collections.Count - 1 - i) * player.perYOffset);
             GameObject gem = player.collections[i];
 
-            StartCoroutine(IESaleLastGem(other,gem, targetPosition));
+            StartCoroutine(IESaleLastGem(other, gem, targetPosition));
 
             yield return new WaitForSeconds(0.2f);
         }

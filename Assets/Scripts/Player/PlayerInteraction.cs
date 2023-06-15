@@ -109,15 +109,15 @@ public class PlayerInteraction : MonoBehaviour
     }
 }
 
-    //private void FollowPrevious()
-    //{
-    //    for (int i = 0; i < collections.Count; i++)
-    //    {
-    //        if (i == 0)
-    //        {
-    //            collections[i].transform.position = firstFollowPaper.transform.position;
-    //        }
-    //        else
-    //        {
-    //
-    //       collections[i].transform.localPosition = Vector3.Lerp(collections[i].transform.localPosition, new Vector3
+//private void FollowPrevious()
+//{
+//    for (int i = 0; i < collections.Count; i++)
+//    {
+//        if (i == 0)
+//        {
+//            collections[i].transform.position = firstFollowPaper.transform.position;
+//        }
+//        else
+//        {
+//
+//       collections[i].transform.localPosition = Vector3.Lerp(collections[i].transform.localPosition, new Vector3
