@@ -22,5 +22,12 @@ To run Flush Games on your local machine, follow the steps below:
 2. Open the project in Unity 2021.3.19f1 or a compatible version.
 3. Build games for your target platform (e.g. Android, iOS, Windows) in Unity.
 4. Run the built-in game on your device or simulator to start playing the demo
+   
+<div align="center">
+  <img src="https://github.com/Alperclktp/FlushGamesCase/assets/62898007/df1576dd-0c56-4ad3-8319-12f94cdead30" width="320">
+</div>
+
+
+
 
 
